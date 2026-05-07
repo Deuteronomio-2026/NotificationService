@@ -60,7 +60,8 @@ jobs:
         uses: azure/CLI@v1
         with:
           inlineScript: |
+            OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
             az containerapp update \
               --name notification-service \
               --resource-group offer-service-rg \
-              --image ghcr.io/${{ env.OWNER }}/notification-service:latest
+              --image ghcr.io/$OWNER/notification-service:latest
