@@ -21,4 +21,16 @@ public class NotificationController {
             @PathVariable UUID userId) {
         return ResponseEntity.ok(notificationService.getNotificationsByUser(userId));
     }
+
+    @PatchMapping("/{userId}/read-all")
+    public ResponseEntity<Void> markAllAsRead(@PathVariable UUID userId) {
+        notificationService.markAllAsRead(userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{userId}/{notificationId}/read")
+    public ResponseEntity<Void> markAsRead(@PathVariable UUID userId, @PathVariable UUID notificationId) {
+        notificationService.markAsRead(notificationId, userId);
+        return ResponseEntity.ok().build();
+    }
 }

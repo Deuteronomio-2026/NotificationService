@@ -1,7 +1,8 @@
 package com.mindbridge.notification_service.dto;
 
 import lombok.*;
-import java.time.LocalDateTime;
+
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Data
@@ -14,5 +15,5 @@ public class NotificationResponseDTO {
     private String type;
     private String message;
     private boolean read;
-    private LocalDateTime createdAt;
+    private ZonedDateTime createdAt;
 }

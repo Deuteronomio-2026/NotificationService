@@ -5,8 +5,9 @@ import com.mindbridge.notification_service.model.Notification;
 import com.mindbridge.notification_service.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -23,7 +24,7 @@ public class NotificationService {
                 .type(type)
                 .message(message)
                 .read(false)
-                .createdAt(LocalDateTime.now())
+                .createdAt(ZonedDateTime.now())
                 .build();
         notificationRepository.save(notification);
     }
@@ -34,6 +35,23 @@ public class NotificationService {
                 .map(this::toDTO)
                 .toList();
     }
+
+    @Transactional
+    public void markAllAsRead(UUID userId) {
+        List<Notification> unread = notificationRepository.findByUserIdAndReadFalse(userId);
+        unread.forEach(n -> n.setRead(true));
+        notificationRepository.saveAll(unread);
+    }
+
+    @Transactional
+    public void markAsRead(UUID notificationId, UUID userId) {
+        Notification notif = notificationRepository.findByIdAndUserId(notificationId, userId)
+                .orElseThrow(() -> new RuntimeException("Notificación no encontrada"));
+        notif.setRead(true);
+        notificationRepository.save(notif);
+    }
+
+
 
     private NotificationResponseDTO toDTO(Notification n) {
         return NotificationResponseDTO.builder()
